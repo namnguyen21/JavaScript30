@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 
@@ -57,10 +59,56 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
 
-</script>
+    const availableKeys = document.querySelectorAll('kbd')
+    const availableSounds = document.querySelectorAll('audio')
+    console.log(availableKeys)
+    const mapOfKeys = new Map();
+
+    for (let key of availableKeys) {
+      const dataKey = key.parentElement.getAttribute('data-key')
+      mapOfKeys.set(key.innerHTML, dataKey)
+    }
+
+    console.log(mapOfKeys)
+
+    function playAudio(key) {
+      for (let audio of availableSounds) {
+        if (audio.getAttribute('data-key') === key) {
+          audio.play()
+        }
+      }
+    }
+
+    function togglePlaying(key) {
+      document.querySelector(`.key[data-key="${key}"]`).classList.add('playing')
+    }
+
+    //set listener for keypress
+    document.addEventListener('keypress', (e) => {
+      const { key } = e;
+      const upperKey = key.toUpperCase();
+      if (mapOfKeys.has(upperKey)) {
+        const dataKey = mapOfKeys.get(upperKey)
+        togglePlaying(dataKey)
+        playAudio(dataKey)
+
+
+        document.addEventListener('keyup', (e) => {
+          document.querySelector(`.key[data-key="${dataKey}"]`).classList.remove('playing')
+        })
+      }
+
+
+    }
+    )
+
+
+
+  </script>
 
 
 </body>
+
 </html>
